@@ -1,1 +1,31 @@
-<p>todo works!</p>
+<button mat-stroked-button (click)="logout()">Logout</button>
+<div class="todo-container">
+    <div class="todo-content">
+        <div class="todo-header">
+            <h1>{{currentTodo.name}}</h1>
+            <button (click)="deleteItem()" class="edit-button" mat-icon-button matTooltip="Delete item">
+                <mat-icon>clear</mat-icon>
+            </button>  
+        </div>
+
+        <div class="todo-main">
+            <h4>Description: <span class='info-text'>{{currentTodo.description || 'No description'}}</span></h4>
+            <button (click)="editItem()" class="edit-button" mat-icon-button matTooltip="Edit item">
+                <mat-icon>create</mat-icon>
+            </button> 
+        </div>
+
+
+        <div class="footer">
+            <h6>Last edit: <span class='info-text'>{{currentTodo.editedAt | date: 'dd/MM/yyyy hh:mm'}}</span></h6>
+            <h6>Created: <span class='info-text'>{{currentTodo.createdAt | date: 'dd/MM/yyyy hh:mm'}}</span></h6>
+        </div>  
+    </div>
+    <form [formGroup]="editForm" [ngClass]="{disabled: !chosenToEdit}">
+        <mat-form-field >
+          <input [readonly]="!chosenToEdit" type="text" matInput placeholder="Enter description" formControlName="description">
+        </mat-form-field>
+        <button mat-button [disabled]="!editForm.valid" (click)="saveEditedItem()">Save</button>
+        <button mat-button [disabled]="!chosenToEdit" (click)="cancelEdit()">Cancel</button>
+    </form>
+</div>

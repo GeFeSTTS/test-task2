@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -11,7 +12,10 @@ export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;
 
-  constructor(private http: HttpClient) {
+  constructor(
+      private http: HttpClient,
+      private router: Router,
+  ) {
       this.currentUserSubject = new BehaviorSubject<any>(localStorage.getItem('jwt'));
       this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -37,6 +41,7 @@ export class AuthenticationService {
   logout() {
       // remove user from local storage to log user out
       localStorage.removeItem('jwt');
+      this.router.navigate(['/login']);
       this.currentUserSubject.next(null);
   }
 }

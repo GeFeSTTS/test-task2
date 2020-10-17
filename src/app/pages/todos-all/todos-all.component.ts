@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { RequestsService } from '../../_services';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -7,6 +6,8 @@ import { takeUntil, tap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 import { MatTableDataSource } from '@angular/material/table';
+
+import { AuthenticationService, RequestsService } from '../../_services';
 
 export interface Element {
   id: number;
@@ -31,7 +32,8 @@ export class TodosAllComponent implements OnInit {
   constructor( 
     private api: RequestsService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private authenticationService: AuthenticationService
   ) {
     this.unsubscribe = new Subject();
   }
@@ -44,9 +46,6 @@ export class TodosAllComponent implements OnInit {
     });
   }
 
-  /*
-  * On destroy
-  */
 	ngOnDestroy(): void {
     this.unsubscribe.next();
     this.unsubscribe.complete();
@@ -54,14 +53,14 @@ export class TodosAllComponent implements OnInit {
 
   getTableInfo() {
     return this.api.getAllTodos()
-    .pipe(
-      tap(todos => todos),
-      takeUntil(this.unsubscribe)
-    )
-    .subscribe((todos: Array<Element>) => {
-      this.dataSource = new MatTableDataSource(todos);
-      this.displayedColumns = ['id', 'name', 'createdAt', 'editedAt', 'actions'];
-    });
+      .pipe(
+        tap(todos => todos),
+        takeUntil(this.unsubscribe)
+      )
+      .subscribe((todos: Array<Element>) => {
+        this.dataSource = new MatTableDataSource(todos);
+        this.displayedColumns = ['id', 'name', 'createdAt', 'editedAt', 'actions'];
+      });
   }
 
   get f() { return this.editAddForm.controls; }
@@ -88,7 +87,8 @@ export class TodosAllComponent implements OnInit {
     this.editAddForm.reset();
   }
 
-  editItem(item) {
+  editItem(item, event) {
+    event.stopPropagation();
     this.editValue = true;
     this.editObject = item;
     this.f['item'].setValue(item.name);
@@ -122,7 +122,8 @@ export class TodosAllComponent implements OnInit {
     this.editAddForm.reset();
   }
 
-  deleteItem(id) {
+  deleteItem(id, event) {
+    event.stopPropagation();
     this.api.deleteTodo(id)
     .pipe(
       tap(todos => todos),
@@ -133,6 +134,10 @@ export class TodosAllComponent implements OnInit {
 
   redirect(id) {
     this.router.navigate([`/todo/${id}`]);
+  }
+
+  logout() {
+    this.authenticationService.logout();
   }
 
 }
