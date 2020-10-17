@@ -1,11 +1,18 @@
 {
-    "items": [
-        {
-            "id": 1,
-            "name": "Lear JS",
-            "description": "I want to know JS very well", 
-            "createdAt": "2014-12-09T13:50:51.644000Z", 
-            "editedAt": "2014-12-20T21:17:56.891000Z"
-        }
-    ]
+  "items": [
+    {
+      "name": "My First TODO",
+      "description": "I want to know JS very well",
+      "createdAt": "2014-12-09T13:50:51.644000Z",
+      "editedAt": "2014-12-20T21:17:56.891000Z",
+      "id": 1
+    },
+    {
+      "name": "My Second TODO",
+      "description": "I want to know Angular very well",
+      "createdAt": "2020-12-09T13:50:51.644000Z",
+      "editedAt": "2020-12-20T21:17:56.891000Z",
+      "id": 2
+    }
+  ]
 }

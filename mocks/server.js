@@ -6,10 +6,17 @@ const jwt = require('jsonwebtoken')
 const server = jsonServer.create()
 const router = jsonServer.router('mocks/data.json')
 const userdb = JSON.parse(fs.readFileSync('mocks/users.json', 'UTF-8'))
+const middlewares = jsonServer.defaults({ noCors: true })
 
 server.use(bodyParser.urlencoded({extended: true}))
 server.use(bodyParser.json())
 server.use(jsonServer.defaults());
+server.use(middlewares);
+server.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 const SECRET_KEY = '123456789'
 
@@ -70,23 +77,19 @@ server.post('/auth/register', (req, res) => {
 
   // Create token for new user
   const access_token = createToken({email, password})
-  console.log("Access Token:" + access_token);
   res.status(200).json({access_token})
 })
 
 // Login to one of the users from ./users.json
 server.post('/auth/login', (req, res) => {
-  console.log("login endpoint called; request body:");
-  console.log(req.body);
   const {email, password} = req.body;
   if (isAuthenticated({email, password}) === false) {
-    const status = 401
+    const status = 404
     const message = 'Incorrect email or password'
     res.status(status).json({status, message})
     return
   }
   const access_token = createToken({email, password})
-  console.log("Access Token:" + access_token);
   res.status(200).json({access_token})
 })
 

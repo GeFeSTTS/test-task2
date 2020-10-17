@@ -1,0 +1,20 @@
+<div class="login-container">
+    <div class="login-content">
+      <mat-toolbar class="login-toolbar">Todo App</mat-toolbar>
+      <mat-card>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <mat-form-field>
+            <mat-icon matPrefix>person_outline</mat-icon>
+            <input autofocus type="text" matInput placeholder="Email" formControlName="email">
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-icon matPrefix>lock_outline</mat-icon>
+            <input type="password" autocomplete="false" matInput placeholder="Password" formControlName="password">
+          </mat-form-field>
+
+          <button type="submit" mat-raised-button>Login</button>
+        </form>
+      </mat-card>
+    </div>
+</div>
