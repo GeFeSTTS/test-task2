@@ -1,28 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { RequestsService } from '../../_services';
-// RxJS
-import { takeUntil, tap, finalize } from 'rxjs/operators';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+
+import { takeUntil, tap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
+import { MatTableDataSource } from '@angular/material/table';
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-  {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-  {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-  {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-  {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
-];
+export interface Element {
+  id: number;
+  name: string;
+  createdAt: string;
+  editedAt: string;
+}
 
 @Component({
   selector: 'app-todos-all',
@@ -31,16 +22,26 @@ const ELEMENT_DATA: PeriodicElement[] = [
 })
 export class TodosAllComponent implements OnInit {
   private unsubscribe: Subject<any>;
+  editAddForm: FormGroup;
+  editValue: boolean = false;
+  editObject: object;
+  displayedColumns;
+  dataSource;
 
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = ELEMENT_DATA;
-
-  constructor( private api: RequestsService) {
+  constructor( 
+    private api: RequestsService,
+    private formBuilder: FormBuilder,
+    private router: Router
+  ) {
     this.unsubscribe = new Subject();
   }
 
   ngOnInit() {
     this.getTableInfo();
+
+    this.editAddForm = this.formBuilder.group({
+      item: ['', Validators.required]
+    });
   }
 
   /*
@@ -57,9 +58,81 @@ export class TodosAllComponent implements OnInit {
       tap(todos => todos),
       takeUntil(this.unsubscribe)
     )
-    .subscribe(todos => {
-      console.log('Todos', todos);
-    })
+    .subscribe((todos: Array<Element>) => {
+      this.dataSource = new MatTableDataSource(todos);
+      this.displayedColumns = ['id', 'name', 'createdAt', 'editedAt', 'actions'];
+    });
+  }
+
+  get f() { return this.editAddForm.controls; }
+
+  addNewItem() {
+    if (this.editAddForm.invalid) {
+      return;
+    }
+
+    const body = {
+      name: this.f.item.value,
+      createdAt: new Date(),
+      editedAt: new Date()
+    };
+
+    this.api.addNewTodo(body)
+    .pipe(
+      tap(todos => todos),
+      takeUntil(this.unsubscribe)
+    )
+    .subscribe(() => this.getTableInfo());
+
+    // Clear form
+    this.editAddForm.reset();
+  }
+
+  editItem(item) {
+    this.editValue = true;
+    this.editObject = item;
+    this.f['item'].setValue(item.name);
+  }
+
+  saveEditedItem() {
+    if (this.editAddForm.invalid) {
+      return;
+    }
+
+    const body = {
+      ...this.editObject,
+      name: this.f.item.value,
+      editedAt: new Date()
+    };
+
+    this.api.editTodo(body)
+    .pipe(
+      tap(todos => todos),
+      takeUntil(this.unsubscribe)
+    )
+    .subscribe(() => this.getTableInfo());
+
+    this.editValue = false;
+    // Clear form
+    this.editAddForm.reset();
+  }
+
+  cancelEdit() {
+    this.editValue = false;
+    this.editAddForm.reset();
+  }
+
+  deleteItem(id) {
+    this.api.deleteTodo(id)
+    .pipe(
+      tap(todos => todos),
+      takeUntil(this.unsubscribe)
+    )
+    .subscribe(() => this.getTableInfo());
+  }
+
+  redirect(id) {
+    this.router.navigate([`/todo/${id}`]);
   }
 
 }

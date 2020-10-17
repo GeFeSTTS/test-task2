@@ -1,3 +1,51 @@
-table {
-    width: 100%;
+.table-container {
+    padding: 2% 20%;
+
+    table {
+        width: 100%;
+        background-color: #362e2ed7;
+    
+        .mat-header-cell {
+            color: #fff;
+        }
+    
+        .mat-cell {
+            color: rgba(255, 255, 255, 0.74);
+        }
+
+        .mat-row {
+            cursor: pointer;
+        }
+
+        .edit-button {
+            color: rgba(49, 135, 233, 0.849);
+        }
+        
+        .delete-button {
+            color: rgba(235, 38, 38, 0.767);
+        }
+    }
+    
+    form {
+        margin-top: 2%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+
+        mat-form-field {
+            width: 100%;
+        }
+
+        button {
+            margin-left: 1%;
+            background-color: #362e2ed7;
+            color: #fff;
+        }
+    }
+}
+
+.page-header {
+    padding: 2% 20%;
+    font-weight: bold;
+    font-size: 2.2em;
 }

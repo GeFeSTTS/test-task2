@@ -16,4 +16,16 @@ export class RequestsService {
   getChosenTodo(id) {
     return this.http.get(`${REQUEST_API}/items/${id}`);
   }
+
+  addNewTodo(body) {
+    return this.http.post(`${REQUEST_API}/items`, {...body});
+  }
+
+  editTodo(body) {
+    return this.http.put(`${REQUEST_API}/items/${body.id}`, {...body});
+  }
+
+  deleteTodo(id) {
+    return this.http.delete(`${REQUEST_API}/items/${id}`);
+  }
 }

@@ -8,11 +8,16 @@
       "id": 1
     },
     {
-      "name": "My Second TODO",
-      "description": "I want to know Angular very well",
-      "createdAt": "2020-12-09T13:50:51.644000Z",
-      "editedAt": "2020-12-20T21:17:56.891000Z",
-      "id": 2
+      "name": "Learn hard",
+      "createdAt": "2020-10-17T17:31:56.071Z",
+      "editedAt": "2020-10-17T17:31:56.071Z",
+      "id": 3
+    },
+    {
+      "name": "Leard NodeJS",
+      "createdAt": "2020-10-17T17:32:02.873Z",
+      "editedAt": "2020-10-17T17:32:02.873Z",
+      "id": 4
     }
   ]
 }
