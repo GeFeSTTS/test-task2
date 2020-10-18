@@ -44,7 +44,10 @@ export class TodoComponent implements OnInit {
     this.getCurrentTodoInfo(id);
 
     this.editForm = this.formBuilder.group({
-      description: ['', Validators.required]
+      description: ['', Validators.compose([
+        Validators.minLength(3),
+        Validators.required
+      ])]
     });
   }
 

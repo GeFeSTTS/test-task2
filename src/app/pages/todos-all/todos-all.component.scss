@@ -42,6 +42,10 @@
             background-color: #362e2ed7;
             color: #fff;
         }
+
+        button:disabled {
+            opacity: 0.4
+        }
     }
 }
 

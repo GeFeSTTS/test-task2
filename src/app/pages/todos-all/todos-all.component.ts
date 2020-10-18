@@ -46,7 +46,11 @@ export class TodosAllComponent implements OnInit {
     this.getTableInfo();
 
     this.editAddForm = this.formBuilder.group({
-      item: ['', Validators.required]
+      item: ['', Validators.compose([
+        Validators.pattern('^[a-zA-Z0-9\\s]+$'),
+        Validators.minLength(3),
+        Validators.required
+      ])]
     });
   }
 
@@ -165,5 +169,4 @@ export class TodosAllComponent implements OnInit {
   logout() {
     this.authenticationService.logout();
   }
-
 }

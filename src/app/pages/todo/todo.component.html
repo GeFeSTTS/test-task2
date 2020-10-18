@@ -24,6 +24,12 @@
     <form [formGroup]="editForm" [ngClass]="{disabled: !chosenToEdit}">
         <mat-form-field >
           <input [readonly]="!chosenToEdit" type="text" matInput placeholder="Enter description" formControlName="description">
+          <mat-error *ngIf="editForm.get('description').hasError('required')">
+            <strong>This field is required</strong>
+          </mat-error>
+          <mat-error *ngIf="editForm.get('description').hasError('minlength')">
+            <strong>The field must contain at least 3 characters</strong>
+          </mat-error>
         </mat-form-field>
         <button mat-button [disabled]="!editForm.valid" (click)="saveEditedItem()">Save</button>
         <button mat-button [disabled]="!chosenToEdit" (click)="cancelEdit()">Cancel</button>

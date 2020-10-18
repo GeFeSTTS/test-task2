@@ -48,9 +48,18 @@
   <form [formGroup]="editAddForm">
     <mat-form-field>
       <input type="text" matInput placeholder="Enter to do" formControlName="item">
+      <mat-error *ngIf="editAddForm.get('item').hasError('required')">
+        <strong>This field is required</strong>
+      </mat-error>
+      <mat-error *ngIf="editAddForm.get('item').hasError('minlength')">
+        <strong>The field must contain at least 3 characters</strong>
+      </mat-error>
+      <mat-error *ngIf="editAddForm.get('item').hasError('pattern')">
+        <strong>TODO should contain only numbers and letters</strong>
+      </mat-error>
     </mat-form-field>
-		<button mat-button (click)="addNewItem()" *ngIf="!editValue">Add</button>
-    <button mat-button (click)="saveEditedItem()" *ngIf="editValue">Save</button>
+		<button mat-button [disabled]="!editAddForm.valid" (click)="addNewItem()" *ngIf="!editValue">Add</button>
+    <button mat-button [disabled]="!editAddForm.valid" (click)="saveEditedItem()" *ngIf="editValue">Save</button>
     <button mat-button (click)="cancelEdit()" *ngIf="editValue">Cancel</button>
 	</form>
 </div>

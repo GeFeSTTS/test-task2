@@ -13,7 +13,7 @@
             <input type="password" autocomplete="false" matInput placeholder="Password" formControlName="password">
           </mat-form-field>
 
-          <button type="submit" mat-raised-button>Login</button>
+          <button type="submit" mat-raised-button [disabled]="!loginForm.valid">Login</button>
         </form>
       </mat-card>
     </div>
