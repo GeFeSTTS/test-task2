@@ -1,4 +1,9 @@
+::ng-deep app-alert {
+    position: absolute;
+}
+
 .alert {
+    box-sizing: border-box;
     width: 100vw;
     padding: 1% 2%;
     color: #fff;

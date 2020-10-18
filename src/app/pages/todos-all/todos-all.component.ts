@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
 import { takeUntil, tap } from 'rxjs/operators';
@@ -8,6 +9,8 @@ import { Subject } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 
 import { AuthenticationService, RequestsService } from '../../_services';
+
+import { ConfirmationDialogComponent } from '../../_components/confirmation-dialog/confirmation-dialog.component';
 
 export interface Element {
   id: number;
@@ -33,7 +36,8 @@ export class TodosAllComponent implements OnInit {
     private api: RequestsService,
     private formBuilder: FormBuilder,
     private router: Router,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private dialog: MatDialog
   ) {
     this.unsubscribe = new Subject();
   }
@@ -76,19 +80,30 @@ export class TodosAllComponent implements OnInit {
       editedAt: new Date()
     };
 
-    this.api.addNewTodo(body)
-    .pipe(
-      tap(todos => todos),
-      takeUntil(this.unsubscribe)
-    )
-    .subscribe(() => this.getTableInfo());
+    const confirmDialog = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: 'Add TODO',
+        message: `Are you sure, you want to add TODO: '${body.name}'?`
+      }
+    });
+    confirmDialog.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.api.addNewTodo(body)
+          .pipe(
+            tap(todos => todos),
+            takeUntil(this.unsubscribe)
+          )
+          .subscribe(() => this.getTableInfo());
 
-    // Clear form
-    this.editAddForm.reset();
+        // Clear form
+        this.editAddForm.reset();
+      }
+    });
   }
 
   editItem(item, event) {
     event.stopPropagation();
+
     this.editValue = true;
     this.editObject = item;
     this.f['item'].setValue(item.name);
@@ -122,14 +137,25 @@ export class TodosAllComponent implements OnInit {
     this.editAddForm.reset();
   }
 
-  deleteItem(id, event) {
+  deleteItem(id, name, event) {
     event.stopPropagation();
-    this.api.deleteTodo(id)
-    .pipe(
-      tap(todos => todos),
-      takeUntil(this.unsubscribe)
-    )
-    .subscribe(() => this.getTableInfo());
+
+    const confirmDialog = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: 'Delete TODO',
+        message: `Are you sure, you want to remove TODO: '${name}'`
+      }
+    });
+    confirmDialog.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.api.deleteTodo(id)
+          .pipe(
+            tap(todos => todos),
+            takeUntil(this.unsubscribe)
+          )
+          .subscribe(() => this.getTableInfo());
+      }
+    });
   }
 
   redirect(id) {

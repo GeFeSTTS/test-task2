@@ -35,7 +35,7 @@
 				<button (click)="editItem(item, $event)" class="edit-button" mat-icon-button matTooltip="Edit item">
 					<mat-icon>create</mat-icon>
 				</button>
-				<button class="delete-button" (click)="deleteItem(item.id, $event)" mat-icon-button type="button" matTooltip="Delete item">
+				<button class="delete-button" (click)="deleteItem(item.id, item.name, $event)" mat-icon-button type="button" matTooltip="Delete item">
 					<mat-icon>delete</mat-icon>
 				</button>
 			</td>

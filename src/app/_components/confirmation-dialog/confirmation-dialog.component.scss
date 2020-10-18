@@ -1,0 +1,24 @@
+::ng-deep mat-dialog-container {
+    background-color: #1f1f1f !important;
+}
+
+.modal-container {
+    h1 {
+        font-weight: bold;
+        color: #fff;
+    }
+
+    div {
+        color: #fff;
+    }
+
+    .modal-footer {
+        margin-top: 5%;
+        display: flex;
+        justify-content: flex-end;
+
+        button:last-child {
+            margin-left: 2%;
+        }
+    }
+}

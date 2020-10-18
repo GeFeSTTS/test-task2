@@ -16,10 +16,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTableModule } from '@angular/material/table';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 
 import { AlertComponent } from './_components/alert/alert.component';
+import { ConfirmationDialogComponent } from './_components/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,8 @@ import { AlertComponent } from './_components/alert/alert.component';
     SigninComponent,
     TodoComponent,
     TodosAllComponent,
-    AlertComponent
+    AlertComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +43,8 @@ import { AlertComponent } from './_components/alert/alert.component';
     MatIconModule,
     MatButtonModule,
     MatTableModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatDialogModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 
 import { takeUntil, tap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 import { AuthenticationService, RequestsService } from '../../_services';
+
+import { ConfirmationDialogComponent } from '../../_components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-todo',
@@ -30,7 +33,8 @@ export class TodoComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private currentRoute: ActivatedRoute,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private dialog: MatDialog
   ) {
     this.unsubscribe = new Subject();
    }
@@ -89,13 +93,23 @@ export class TodoComponent implements OnInit {
   }
 
   deleteItem() {
-    this.api.deleteTodo(this.currentTodo.id)
-    .pipe(
-      tap(todo => todo),
-      takeUntil(this.unsubscribe)
-    )
-    .subscribe();
-    return this.router.navigate(['']);
+    const confirmDialog = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: 'Delete TODO',
+        message: `Are you sure, you want to remove TODO: '${this.currentTodo.name}'`
+      }
+    });
+    confirmDialog.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.api.deleteTodo(this.currentTodo.id)
+        .pipe(
+          tap(todo => todo),
+          takeUntil(this.unsubscribe)
+        )
+        .subscribe();
+        return this.router.navigate(['']);
+      }
+    });
   }
 
   cancelEdit() {
