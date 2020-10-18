@@ -47,7 +47,7 @@ export class TodosAllComponent implements OnInit {
 
     this.editAddForm = this.formBuilder.group({
       item: ['', Validators.compose([
-        Validators.pattern('^[a-zA-Z0-9\\s]+$'),
+        Validators.pattern(/^[a-zA-Z0-9\s]+$/),
         Validators.minLength(3),
         Validators.required
       ])]
